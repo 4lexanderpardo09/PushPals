@@ -118,3 +118,4 @@ Añadir sección "Login" en README.
 
 Frontend pixel-art visualization planned — see [FUTURE.md](FUTURE.md).
 # PushPals
+# test
