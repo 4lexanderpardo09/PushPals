@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 
@@ -28,31 +29,32 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
         logger.info("No commits in push, ignoring")
         return {"status": "ignored", "reason": "no commits"}
 
+    event_id = uuid.uuid4().hex[:12]
     full_name = repo.get("full_name", "")
     sha = commits[0].get("id", "")
     branch = ref.replace("refs/heads/", "")
 
-    logger.info("Event received: %s %s (%s)", full_name, sha, branch)
-    background_tasks.add_task(_process_event, full_name, sha)
-    return {"status": "ok", "commit": sha}
+    logger.info("[%s] Event received: %s %s (%s)", event_id, full_name, sha, branch)
+    background_tasks.add_task(_process_event, event_id, full_name, sha)
+    return {"status": "ok", "commit": sha, "event_id": event_id}
 
 
-async def _process_event(full_name: str, sha: str) -> None:
+async def _process_event(event_id: str, full_name: str, sha: str) -> None:
     """Fetch diff, run agents, post comment."""
-    logger.info("Fetching diff %s %s", full_name, sha)
+    logger.info("[%s] Fetching diff %s %s", event_id, full_name, sha)
     diff = await get_commit_diff(full_name, sha)
 
     if not diff:
-        logger.info("No diff for %s %s, skipping", full_name, sha)
+        logger.info("[%s] No diff for %s %s, skipping", event_id, full_name, sha)
         return
 
-    logger.info("Running agents %s %s", full_name, sha)
+    logger.info("[%s] Running agents %s %s", event_id, full_name, sha)
     results = await run_all(diff)
 
     comment = format_comment(results)
-    logger.info("Posting comment %s %s", full_name, sha)
+    logger.info("[%s] Posting comment %s %s", event_id, full_name, sha)
     try:
         await post_commit_comment(full_name, sha, comment)
-        logger.info("Comment posted %s %s", full_name, sha)
+        logger.info("[%s] Comment posted %s %s", event_id, full_name, sha)
     except Exception as e:
-        logger.error("Failed to post comment %s %s: %s", full_name, sha, e)
+        logger.error("[%s] Failed to post comment %s %s: %s", event_id, full_name, sha, e)
