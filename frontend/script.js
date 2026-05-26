@@ -155,6 +155,8 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+const agentTimers = {};
+
 function setAgentState(agentKey, state, message = '') {
   agentStates[agentKey] = state;
   const card = document.querySelector(`.card[data-agent="${agentKey}"]`);
@@ -172,17 +174,27 @@ function setAgentState(agentKey, state, message = '') {
   };
   if (statusEl) statusEl.textContent = labels[state] || message;
 
+  // Clear existing timer on state change
+  if (agentTimers[agentKey]) {
+    clearInterval(agentTimers[agentKey]);
+    delete agentTimers[agentKey];
+  }
+
   if (state === 'running') {
     const start = Date.now();
-    const timer = setInterval(() => {
-      if (agentStates[agentKey] !== 'running') { clearInterval(timer); return; }
+    agentTimers[agentKey] = setInterval(() => {
+      if (agentStates[agentKey] !== 'running') {
+        clearInterval(agentTimers[agentKey]);
+        delete agentTimers[agentKey];
+        return;
+      }
       const sec = ((Date.now() - start) / 1000).toFixed(1);
       if (timerEl) timerEl.textContent = `${sec}s`;
     }, 100);
   }
 
   if (state === 'done') {
-    if (message) { timerEl.textContent = message; }
+    if (message) timerEl.textContent = message;
   }
   if (state === 'error' || state === 'idle') {
     if (timerEl) timerEl.textContent = '';

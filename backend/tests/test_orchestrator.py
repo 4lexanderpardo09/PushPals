@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 
-from app.agents.orchestrator import _run_single, format_comment, run_all
+from app.agents.orchestrator import format_comment, run_all, run_single
 from app.agents.provider import AIProvider
 from app.agents.prompts import AGENT_PROMPTS
 from tests.conftest import SAMPLE_DIFF
@@ -43,25 +43,28 @@ class SlowProvider(AIProvider):
 class TestRunSingle:
     async def test_returns_response_on_success(self):
         provider = FakeProvider({"qa": "Found a bug"})
-        key, text = await _run_single(provider, "qa", SAMPLE_DIFF)
+        key, text, success = await run_single(provider, "qa", SAMPLE_DIFF)
         assert key == "qa"
         assert text == "Found a bug"
+        assert success is True
 
     async def test_returns_error_message_on_exception(self):
         provider = FailProvider()
-        key, text = await _run_single(provider, "qa", SAMPLE_DIFF)
+        key, text, success = await run_single(provider, "qa", SAMPLE_DIFF)
         assert key == "qa"
         assert "⚠️" in text
         assert "QA" in text
         assert "API failure" in text
+        assert success is False
 
     async def test_timeout_returns_specific_message(self, monkeypatch):
         monkeypatch.setattr("app.core.config.settings.agent_timeout", 1)
         provider = SlowProvider()
-        key, text = await _run_single(provider, "qa", SAMPLE_DIFF)
+        key, text, success = await run_single(provider, "qa", SAMPLE_DIFF)
         assert key == "qa"
         assert "excedió" in text
         assert "tiempo límite" in text
+        assert success is False
 
 
 class TestRunAll:

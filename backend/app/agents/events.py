@@ -10,7 +10,7 @@ class AgentEvent:
     agent_key: str
     agent_name: str
     emoji: str
-    state: str  # running | done | error | complete
+    state: str  # running | done | error | complete | all_error
     message: str = ""
 
 
@@ -29,5 +29,5 @@ def unsubscribe(q: asyncio.Queue) -> None:
 
 
 async def broadcast(event: AgentEvent) -> None:
-    for q in _clients:
+    for q in _clients.copy():
         await q.put(event)
