@@ -11,6 +11,9 @@ setup:
 run:
 	cd backend && uvicorn app.main:app --reload --port 8000
 
+frontend:
+	cd frontend && python3 -m http.server 9090
+
 test:
 	cd backend && python -m pytest tests/ -v
 

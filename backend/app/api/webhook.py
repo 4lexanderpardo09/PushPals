@@ -49,7 +49,7 @@ async def _process_event(event_id: str, full_name: str, sha: str) -> None:
         return
 
     logger.info("[%s] Running agents %s %s", event_id, full_name, sha)
-    results = await run_all(diff)
+    results = await run_all(diff, event_id=event_id)
 
     comment = format_comment(results)
     logger.info("[%s] Posting comment %s %s", event_id, full_name, sha)

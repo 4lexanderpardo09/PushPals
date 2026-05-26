@@ -1,10 +1,13 @@
 import logging
+import os
 import time
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.webhook import router as webhook_router
+from app.api.ws import router as ws_router
 from app.core.config import settings
 
 logging.basicConfig(
@@ -22,13 +25,9 @@ app.add_middleware(
 )
 
 app.include_router(webhook_router)
+app.include_router(ws_router)
 
 _start_time = time.time()
-
-
-@app.get("/")
-async def root():
-    return {"status": "ok", "service": "PushPals"}
 
 
 @app.get("/health")
@@ -43,3 +42,12 @@ async def health():
         if settings.ai_provider in ("deepseek", "openai")
         else settings.anthropic_model,
     }
+
+
+# Serve frontend static files
+_frontend_dir = os.environ.get(
+    "FRONTEND_DIR",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "frontend"),
+)
+if os.path.isdir(_frontend_dir):
+    app.mount("/", StaticFiles(directory=_frontend_dir, html=True), name="frontend")
