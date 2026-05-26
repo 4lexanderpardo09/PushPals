@@ -199,9 +199,9 @@ function addLog(agentKey, state, message) {
   entry.textContent = `${prefix} ${message}`;
   log.appendChild(entry);
   log.scrollTop = log.scrollHeight;
-}
+} 
 
-// WebSocket
+// Websocket
 function connectWS() {
   const backendHost = document.body.dataset.backendHost || location.host;
   const proto = backendHost.includes('localhost') || backendHost.includes('127.0.0.1') ? 'ws:' : 'wss:';
