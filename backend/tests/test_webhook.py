@@ -57,8 +57,7 @@ class TestWebhookRejection:
 
 
 class TestWebhookAccept:
-    def test_valid_webhook_returns_200_ok(self, client, monkeypatch):
-        # Prevent background task from hitting real GitHub API
+    def test_valid_webhook_returns_200_with_event_id(self, client, monkeypatch):
         async def mock_process(*args):
             pass
 
@@ -70,6 +69,8 @@ class TestWebhookAccept:
         data = resp.json()
         assert data["status"] == "ok"
         assert data["commit"] == "abc123def456"
+        assert isinstance(data["event_id"], str)
+        assert len(data["event_id"]) == 12
 
     def test_different_branch_extracts_correctly(self, client, monkeypatch):
         async def mock_process(*args):
