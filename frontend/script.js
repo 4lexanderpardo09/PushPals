@@ -155,6 +155,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+// Track per-agent intervals so we clean up before starting a new one (prevents leaks)
 const agentTimers = {};
 
 function setAgentState(agentKey, state, message = '') {

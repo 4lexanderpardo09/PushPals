@@ -61,15 +61,18 @@ async def run_single(
 
 
 async def run_all(diff: str, event_id: str = "") -> dict[str, str]:
-    """Run all agents in parallel. Returns {key: response_text}."""
+    """Run all agents in parallel. Returns {key: response_text}.
+
+    Broadcasts final system event: "complete" if any agent succeeded, "all_error" if all failed.
+    """
     provider = create_provider()
     tasks = [run_single(provider, k, diff, event_id) for k in AGENT_PROMPTS]
     results = await asyncio.gather(*tasks)
 
     if event_id:
-        any_ok = any(r[2] for r in results)
-        state = "complete" if any_ok else "all_error"
-        msg = "" if any_ok else "Todos los agentes fallaron"
+        any_succeeded = any(r[2] for r in results)
+        state = "complete" if any_succeeded else "all_error"
+        msg = "" if any_succeeded else "Todos los agentes fallaron"
         await broadcast(
             AgentEvent(event_id, "system", "System", "🤖", state, msg)
         )

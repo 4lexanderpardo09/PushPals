@@ -7,6 +7,8 @@ Sends JSON messages with fields:
 - emoji: str
 - state: str — "running" | "done" | "error" | "complete" | "all_error"
 - message: str
+
+Uses 30s internal timeout on queue reads to detect stale connections.
 """
 
 import asyncio
