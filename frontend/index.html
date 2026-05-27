@@ -1,41 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PushPals — Agent Office</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body data-backend-host="localhost:8000">
-  <div id="game-container"></div>
-
-  <div id="overlay">
-    <span id="connection-badge" class="badge badge-off">Disconnected</span>
-    <div class="agent-mini" id="mini-qa">
-      <span class="dot" id="dot-qa"></span><span class="label">QA</span>
-    </div>
-    <div class="agent-mini" id="mini-reviewer">
-      <span class="dot" id="dot-reviewer"></span><span class="label">REV</span>
-    </div>
-    <div class="agent-mini" id="mini-docs">
-      <span class="dot" id="dot-docs"></span><span class="label">DOCS</span>
-    </div>
-  </div>
-
-  <!-- Phaser CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
-
-  <!-- Game scripts (load order matters) -->
-  <script src="game/systems/isometric.js"></script>
-  <script src="game/data/room-layout.js"></script>
-  <script src="game/data/textures.js"></script>
-  <script src="game/effects/effects.js"></script>
-  <script src="game/network/ws-client.js"></script>
-  <script src="game/scenes/BootScene.js"></script>
-  <script src="game/scenes/MainScene.js"></script>
-  <script src="game/config.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PushPals — Agent Office</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  </head>
+  <body data-backend-host="localhost:8000">
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
