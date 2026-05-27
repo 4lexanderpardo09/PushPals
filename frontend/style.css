@@ -6,55 +6,52 @@
 
 body {
   background: #0a0a1a;
-  color: #e0e0e0;
-  font-family: 'Press Start 2P', monospace;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 20px;
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(0, 136, 255, 0.03) 0%, transparent 50%);
-}
-
-.container {
-  max-width: 900px;
-  width: 100%;
-}
-
-/* Header */
-header {
-  text-align: center;
-  margin-bottom: 32px;
+  align-items: center;
   position: relative;
+  overflow: hidden;
 }
 
-.title {
-  font-size: 28px;
-  color: #00ff88;
-  text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-  letter-spacing: 4px;
-  margin-bottom: 8px;
+#game-container {
+  border: 2px solid #222244;
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.05);
 }
 
-.subtitle {
-  font-size: 10px;
+#game-container canvas {
+  display: block;
+}
+
+/* Overlay status bar */
+#overlay {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(10, 10, 26, 0.85);
+  border: 1px solid #222244;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
   color: #888;
-  margin-bottom: 12px;
+  z-index: 100;
 }
 
 .badge {
-  display: inline-block;
-  font-size: 8px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 2px solid;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid;
 }
 
 .badge-off {
   color: #ff4444;
   border-color: #ff4444;
-  animation: pulse 1.5s infinite;
 }
 
 .badge-on {
@@ -62,203 +59,20 @@ header {
   border-color: #00ff88;
 }
 
-/* Agent Cards */
-.agents {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 20px 12px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #333;
-  transition: background 0.3s;
-}
-
-.card[data-state="running"] {
-  border-color: #ffcc00;
-  box-shadow: 0 0 20px rgba(255, 204, 0, 0.15);
-}
-
-.card[data-state="running"]::before {
-  background: #ffcc00;
-  animation: scanline 2s linear infinite;
-}
-
-.card[data-state="done"] {
-  border-color: #00ff88;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
-}
-
-.card[data-state="done"]::before {
-  background: #00ff88;
-}
-
-.card[data-state="error"] {
-  border-color: #ff4444;
-  box-shadow: 0 0 20px rgba(255, 68, 68, 0.15);
-}
-
-.card[data-state="error"]::before {
-  background: #ff4444;
-}
-
-.card-header {
+.agent-mini {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.emoji-badge {
-  font-size: 16px;
-}
-
-.card h2 {
-  font-size: 12px;
-  color: #ccc;
-}
-
-/* Sprite Canvas */
-.sprite {
-  display: block;
-  margin: 0 auto 12px;
-  image-rendering: pixelated;
-}
-
-/* Status */
-.status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #444;
-  transition: background 0.3s;
-}
-
-.card[data-state="idle"] .status-dot { background: #666; }
-.card[data-state="running"] .status-dot { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; animation: blink 0.8s infinite; }
-.card[data-state="done"] .status-dot { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
-.card[data-state="error"] .status-dot { background: #ff4444; box-shadow: 0 0 8px #ff4444; }
-
-.status-text {
-  font-size: 8px;
-  color: #999;
-}
-
-.timer {
-  font-size: 8px;
-  color: #555;
-  min-height: 12px;
-}
-
-/* Log Panel */
-.log-panel {
-  background: rgba(255, 255, 255, 0.02);
-  border: 2px solid #222;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.log-panel h3 {
-  font-size: 10px;
-  color: #666;
-  margin-bottom: 12px;
-}
-
-.log {
-  max-height: 200px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   gap: 4px;
 }
 
-.log-entry {
-  font-size: 8px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.02);
-  animation: fadeIn 0.3s;
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #444;
 }
 
-.log-info { color: #888; border-left: 2px solid #555; }
-.log-running { color: #ffcc00; border-left: 2px solid #ffcc00; }
-.log-done { color: #00ff88; border-left: 2px solid #00ff88; }
-.log-error { color: #ff4444; border-left: 2px solid #ff4444; }
-.log-complete { color: #8888ff; border-left: 2px solid #8888ff; }
-
-/* Animations */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-@keyframes scanline {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
-}
-
-.card[data-state="error"] .sprite {
-  animation: shake 0.3s ease infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.card[data-state="running"] .sprite {
-  animation: float 0.6s ease infinite;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .agents {
-    grid-template-columns: 1fr;
-  }
-  .title {
-    font-size: 20px;
-  }
-}
+.dot.idle { background: #666; }
+.dot.running { background: #ffcc00; box-shadow: 0 0 6px #ffcc00; }
+.dot.done { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+.dot.error { background: #ff4444; box-shadow: 0 0 6px #ff4444; }

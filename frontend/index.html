@@ -3,69 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PushPals — Agent Team</title>
+<title>PushPals — Agent Office</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-backend-host="localhost:8000">
-  <div class="container">
-    <header>
-      <h1 class="title">PUSHPALS</h1>
-      <p class="subtitle">🤖 Agent Team Review</p>
-      <span id="connection-badge" class="badge badge-off">Disconnected</span>
-    </header>
+  <div id="game-container"></div>
 
-    <div class="agents" id="agents">
-      <div class="card" data-agent="qa">
-        <div class="card-header">
-          <span class="emoji-badge">🐛</span>
-          <h2>QA</h2>
-        </div>
-        <canvas class="sprite" id="sprite-qa" width="72" height="96"></canvas>
-        <div class="status">
-          <span class="status-dot" id="dot-qa"></span>
-          <span class="status-text" id="status-qa">Esperando...</span>
-        </div>
-        <div class="timer" id="timer-qa"></div>
-      </div>
-
-      <div class="card" data-agent="reviewer">
-        <div class="card-header">
-          <span class="emoji-badge">🔍</span>
-          <h2>Reviewer</h2>
-        </div>
-        <canvas class="sprite" id="sprite-reviewer" width="72" height="96"></canvas>
-        <div class="status">
-          <span class="status-dot" id="dot-reviewer"></span>
-          <span class="status-text" id="status-reviewer">Esperando...</span>
-        </div>
-        <div class="timer" id="timer-reviewer"></div>
-      </div>
-
-      <div class="card" data-agent="docs">
-        <div class="card-header">
-          <span class="emoji-badge">📚</span>
-          <h2>Docs</h2>
-        </div>
-        <canvas class="sprite" id="sprite-docs" width="72" height="96"></canvas>
-        <div class="status">
-          <span class="status-dot" id="dot-docs"></span>
-          <span class="status-text" id="status-docs">Esperando...</span>
-        </div>
-        <div class="timer" id="timer-docs"></div>
-      </div>
+  <div id="overlay">
+    <span id="connection-badge" class="badge badge-off">Disconnected</span>
+    <div class="agent-mini" id="mini-qa">
+      <span class="dot" id="dot-qa"></span><span class="label">QA</span>
     </div>
-
-    <div class="log-panel">
-      <h3>📋 Event Log</h3>
-      <div class="log" id="log">
-        <div class="log-entry log-info">Conectando al servidor...</div>
-      </div>
+    <div class="agent-mini" id="mini-reviewer">
+      <span class="dot" id="dot-reviewer"></span><span class="label">REV</span>
+    </div>
+    <div class="agent-mini" id="mini-docs">
+      <span class="dot" id="dot-docs"></span><span class="label">DOCS</span>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Phaser CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+
+  <!-- Game scripts (load order matters) -->
+  <script src="game/systems/isometric.js"></script>
+  <script src="game/data/room-layout.js"></script>
+  <script src="game/data/textures.js"></script>
+  <script src="game/effects/effects.js"></script>
+  <script src="game/network/ws-client.js"></script>
+  <script src="game/scenes/BootScene.js"></script>
+  <script src="game/scenes/MainScene.js"></script>
+  <script src="game/config.js"></script>
 </body>
 </html>
